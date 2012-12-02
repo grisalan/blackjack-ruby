@@ -1,0 +1,1 @@
+This is a practice project for working with Ruby. From the project root, run "ruby bin/blackjack.rb 1000" to deal 1000 blackjack hands. Run "ruby bin/blackjack.rb" to get a list of options.
