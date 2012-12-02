@@ -15,7 +15,7 @@ module Blackjack
 
 
 		def initialize(argv)
-			@options = Blackjack::Options.new(argv)
+			@options = Options.new(argv)
 		end
 
 		def run
@@ -26,7 +26,7 @@ module Blackjack
 			File.open(@options.shoe_file).each do |line|
 				cards << line.strip
 			end
-			initial_shoe = Blackjack::Shoe.new(cards)
+			initial_shoe = Shoe.new(cards)
 
 			# Set up the player strategy
 			strategies = {}
@@ -34,17 +34,17 @@ module Blackjack
 				tokens = line.split(',')
 				strategies[Regexp.new(tokens[0].strip)] = tokens[1].strip
 			end
-			player_strategy = Blackjack::PlayerStrategy.new(strategies)
+			player_strategy = PlayerStrategy.new(strategies)
 
 			# Set up the house rules
-			house_rules = Blackjack::HouseRules.new(@options.stand_on_17, @options.double_after_split, 
+			house_rules = HouseRules.new(@options.stand_on_17, @options.double_after_split, 
 				@options.shuffle_point, @options.base_wager, @options.max_hands)
 
 			# Set up the engine
-			engine = Blackjack::Engine.new(player_strategy, house_rules)
+			engine = Engine.new(player_strategy, house_rules)
 
 			# Set up the trial
-			trial = BlackjackTrial.new("Trial001", engine, initial_shoe, house_rules.shuffle_point, @options.number_of_deals)
+			trial = BlackjackTrial.new("#{@options.number_of_deals}-Hands", engine, initial_shoe, house_rules.shuffle_point, @options.number_of_deals)
 			trial.run
 
 			logger.info("End")
