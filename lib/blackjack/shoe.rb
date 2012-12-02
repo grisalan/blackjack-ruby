@@ -1,4 +1,5 @@
 
+require_relative '../logging/logging'
 
 module Blackjack
 
@@ -11,29 +12,25 @@ module Blackjack
 				raise "Shoe initialized with no cards"
 			end
 			@cards = cards
-			@cursor = 0
 		end
 
 		def number_of_cards
 			@cards.length
 		end
 
-		def current_position
-			@cursor + 1
-		end
-
-		def next_card
-			@cursor = @cursor + 1
-			@cards[@cursor - 1]
+		def next_card(shoeLocation)
+			raise "#{shoeLocation} out of shoe range" if shoeLocation < 1 || shoeLocation > @cards.length
+			@cards[shoeLocation - 1]
 		end
 
 		def shuffle
-			(0...@cards.length).each do |index|
-				random_position = rand(@cards.length)
-				@cards[index], @cards[random_position] = @cards[random_position], @cards[index]
+			cards_new = ""
+			@cards.chars.each { |c| cards_new << c }
+			(0...cards_new.length).each do |index|
+				random_position = rand(cards_new.length)
+				cards_new[index], cards_new[random_position] = cards_new[random_position], cards_new[index]
 			end
-			@cursor = 0
-			logger.debug("Shoe shuffled: #{@cards}")
+			Shoe.new(cards_new)
 		end
 
 	end

@@ -1,3 +1,6 @@
 require_relative 'test_options'
 require_relative 'test_house_rules'
 require_relative 'test_shoe'
+require_relative 'test_player_strategy'
+require_relative 'test_evaluator'
+require_relative 'test_engine'

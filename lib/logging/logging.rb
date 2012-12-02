@@ -1,19 +1,5 @@
 require 'logger'
 
-=begin
-module Logging
-
-  def logger
-    Logging.logger
-  end
-
-  def self.logger
-    @logger ||= Logger.new('blackjack.log')
-  end
-
-end
-=end
-
 
 module Logging
   def logger

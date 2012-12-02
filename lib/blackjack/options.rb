@@ -13,25 +13,31 @@ module Blackjack
      
     DEFAULT_PLAYER_STRATEGY_FILE = "PlayerStrategyBasic.txt"
     DEFAULT_SHOE_FILE = "SixDeck.txt"
-    DEFAULT_STAND_ON_ANY_17 = false
+    DEFAULT_STAND_ON_17 = false
     DEFAULT_DOUBLE_AFTER_SPLIT = false
     DEFAULT_SHUFFLE_POINT = 0.5
+    DEFAULT_BASE_WAGER = 10
+    DEFAULT_MAX_HANDS = 4
     
     attr_reader :player_strategy_file
     attr_reader :shoe_file
-    attr_reader :stand_on_any_17
+    attr_reader :stand_on_17
     attr_reader :double_after_split
     attr_reader :shuffle_point
+    attr_reader :base_wager
+    attr_reader :max_hands
     attr_reader :number_of_deals
-    
+
     def initialize(argv)
       @player_strategy_file = DEFAULT_PLAYER_STRATEGY_FILE
       @shoe_file = DEFAULT_SHOE_FILE
-      @stand_on_any_17 = DEFAULT_STAND_ON_ANY_17
+      @stand_on_17 = DEFAULT_STAND_ON_17
       @double_after_split = DEFAULT_DOUBLE_AFTER_SPLIT
       @shuffle_point = DEFAULT_SHUFFLE_POINT
+      @base_wager = DEFAULT_BASE_WAGER
+      @max_hands = DEFAULT_MAX_HANDS
       parse(argv)
-      @number_of_deals = argv
+      @number_of_deals = argv[0].to_i
     end
                  
   private
@@ -48,8 +54,8 @@ module Blackjack
           @shoe_file = sh_file
         end 
 
-        opts.on("-a", "--[no-]stand-on-any-17", "[no-] stand on any 17 flag") do 
-          @stand_on_any_17 = true
+        opts.on("-a", "--[no-]stand-on-17", "[no-] stand on any 17 flag") do 
+          @stand_on_17 = true
         end 
 
         opts.on("-d", "--[no-]double-after-split", "[no-] double after split flag") do 
@@ -61,6 +67,20 @@ module Blackjack
             raise ArgumentError, "Shuffle point must be between 0.0 and 1.0 inclusive"
           end
           @shuffle_point = sp
+        end 
+
+        opts.on("-m", "--max-hands [n]", Integer, "Maximum hands to play (on splits) >= 1") do |mh|
+          unless mh >= 1
+            raise ArgumentError, "Max hands must be one or greater"
+          end
+          @max_hands = mh
+        end 
+
+        opts.on("-w", "--base-wager [n]", Integer, "Base wager - must be an even number") do |bw|
+          unless bw % 2 == 0
+            raise ArgumentError, "Base wager must be an even number"
+          end
+          @base_wager = bw
         end 
 
         opts.on("-h", "--help", "Show this message") do
